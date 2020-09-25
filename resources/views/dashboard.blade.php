@@ -72,7 +72,14 @@
                                 </form>
                             </div>
                             <div class="flex w-2/12 text-md justify-center ">
-                                <a href="#"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                                <div class="dropdown inline-block relative">
+                                    <a  onclick="myFunction({{$key}})" href="#"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                                    <ul id="dropdown-menu{{$key}}" class="dropdown-menu absolute text-gray-700 pt-1" style="display: none">
+                                        <li class=""><a class="rounded-t bg-gray-100 hover:bg-gray-200 py-2 px-4 block whitespace-no-wrap" href="#">Editar</a></li>
+                                        <li class=""><a class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">Deletar</a></li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     @endforeach
@@ -100,4 +107,29 @@
             </div>
         </div>
     </body>
+<script>
+    const handleClickOutside = (event, number) => {
+
+    }
+
+    function myFunction(number) {
+        let x = document.getElementById("dropdown-menu"+number);
+
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            setTimeout(() => { document.addEventListener('click', function handleClickOutside(e, number) {        let modal = document.getElementById("dropdown-menu"+number);
+                console.log('entrou')
+                if (modal !=(e.target)) {
+                    modal.style.display = 'none';
+                    document.removeEventListener('click', handleClickOutside, false);
+                }}, false) }, 200);
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+
+</script>
 </html>
+
+
