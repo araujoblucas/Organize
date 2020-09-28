@@ -14,7 +14,8 @@
 
 </head>
 
-    <body class="flex justify-between">
+    <body>
+    <div class="flex justify-between">
         <div class=" w-1/5 flex flex-col rounded  text-center" style="border-color: #4D4668; height: 61vh; font-family: 'Roboto', sans-serif; ">
             <div class=" flex flex-col rounded border-r-4 border-b-4 items-center justify-center text-center" style="border-color: #4D4668; height: 50vh; font-family: 'Roboto', sans-serif; ">
                 <?php $faker = Faker\Factory::create(); ?>
@@ -24,7 +25,13 @@
                 <div class="mt-10">
                     <p>{{ Auth::user()->name }}</p>
                     <p>Bem vindo novamente!</p>
-                    <p><a class="hover:text-purple-700" href="#">Editar Perfil</a> | <a class="hover:text-purple-700" href="#">Sair</a></p>
+                    <p><a class="hover:text-purple-700" href="#">Editar Perfil</a></p>
+
+                        <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a onclick="event.preventDefault(); this.closest('form').submit();" class="hover:text-purple-700" href="#">Sair</a>
+                    </form>
                 </div>
             </div>
             <p class="text-sm mt-3 font-light">
@@ -98,7 +105,7 @@
                 <a href="#" class="py-3 mt-2 text-white rounded-lg text-2xl hover:opacity-75" style="width:200px; background-color: #2B234A">
                     Contas
                 </a>
-                <a href="#" class="py-3 mt-2 text-white rounded-lg text-2xl hover:opacity-75" style="width:200px; background-color: #2B234A">
+                <a href="{{ route('tasks.index') }}" class="py-3 mt-2 text-white rounded-lg text-2xl hover:opacity-75" style="width:200px; background-color: #2B234A">
                     Tarefas
                 </a>
                 <a href="#" class="py-3 mt-2 text-white rounded-lg text-2xl hover:opacity-75" style="width:200px; background-color: #2B234A">
@@ -106,6 +113,55 @@
                 </a>
             </div>
         </div>
+    </div>
+    <div id="tasks" class="flex w-full justify-around  mt-5 mb-5" style="height: 80vh;">
+        <div class="w-5/12 flex flex-col border-4" style="border-color: #4D4668;">
+            <div class="flex flex-wrap py-4 w-full text-2xl font-bold justify-center" style="color: #4D4668;">Desafios Diários da Semana</div>
+            <div class="flex flex-col-reverse">
+                @foreach ($tasks as $key => $data)
+                    <div class="flex flex-wrap py-4 w-full
+                        @if ( !$loop->last)
+                        border-b-2
+    @endif
+                        border-gray-400 {{ ($key+1)%2 == 0 ? 'bg-gray-100' : ''}}">
+                        <div class="flex w-6/12 text-md border-r-2 border-gray-400 justify-center ">
+                            {{ $data->desc }}
+                        </div>
+
+                        <div class="flex w-2/12 text-md border-r-2 text-center border-gray-400 justify-center ">
+                            {{ date('d-m', strtotime($data  ->updated_at)) }}
+                        </div>
+                        <div class="flex w-2/12 text-md border-r-2 border-gray-400 justify-center ">
+                            <form method="post" action="{{ route('task.toggle_completed', $data->id) }}">
+                                @method('POST') @csrf
+                                <input onclick="this.form.submit()" type="checkbox" {{ $data->completed ? 'checked' : ''}}>
+                            </form>
+                        </div>
+                        <form class="flex w-2/12 text-sm justify-center" method="POST" action="{{ route('task.delete')}}">
+                            @method('POST') @csrf
+                            <input name='id' value="{{ $data->id }}" style="display: none;"/>
+                            <button onclick="this.form.submit()" href="#"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                @endforeach
+            </div>
+            <form class="flex w-full" method="POST" action="{{ route('task.store')}}">
+                @method('POST') @csrf
+                <div class="flex flex-wrap w-full py-4 bg-gray-100 justify-around">
+                    <input name="desc" class="flex w-8/12 text-md bg-gray-100 py-4 px-4 focus:outline-none" placeholder="Digite sua tarefa aqui..." />
+                    <button class="flex w-2/12 text-md bg-teal-500 text-white text-bold py-4 px-4 focus:outline-none" type="submit">
+                        Adicionar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+    <div class="w-5/12 border-4" style="border-color: #4D4668;">
+
+
+
+    </div>
     </body>
 <script>
     const handleClickOutside = (event, number) => {
@@ -127,8 +183,6 @@
             x.style.display = "none";
         }
     }
-
-
 </script>
 </html>
 
