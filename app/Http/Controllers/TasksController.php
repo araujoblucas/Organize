@@ -20,9 +20,15 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $task = Tasks::where('isWeekly', '=', true)->where('isActive', '=', true)->get();
-        $task = $task->unique('desc');
-        return view('tasks.index', ['tasks' => $task]);
+        $tasks = Tasks::where('isWeekly', '=', true)->where('isActive', '=', true)->get();
+
+        $tasksUnique = $tasks->unique('desc');
+        foreach ($tasksUnique as $item) {
+            $item->done = Tasks::where('desc', '=', $item->desc )->where('completed', '=', true)->count();
+            $item->total = Tasks::where('desc', '=', $item->desc )->count();
+
+        }
+        return view('tasks.index', ['tasks' => $tasksUnique]);
     }
 
     /**

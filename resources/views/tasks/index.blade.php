@@ -22,13 +22,13 @@
                     Descrição
                 </div>
                 <div class="flex w-2/12 text-lg border-r-4 font-bold justify-center ">
-                    Valor
+                    Começo
                 </div>
                 <div class="flex w-2/12 text-lg border-r-4 font-bold justify-center ">
-                    Dia
+                    Dia Final
                 </div>
                 <div class="flex w-2/12 text-lg border-r-4 font-bold justify-center ">
-                    Pago
+                    Feito?
                 </div>
                 <div class="flex w-2/12 text-lg font-bold justify-center ">
                     Opções
@@ -44,15 +44,13 @@
                         {{ $data['desc'] }}
                     </div>
                     <div class="flex w-2/12 text-md border-r-2 border-gray-400 justify-center ">
-                        R$ {{number_format((float)$data['price'], 2, ',', '')}}
+                        {{ $data['created_at'] }}
                     </div>
                     <div class="flex w-2/12 text-md border-r-2 border-gray-400 justify-center ">
-                        {{ $data['date'] }}
+                        {{ $data['finalWeekDate'] }}
                     </div>
                     <div class="flex w-2/12 text-md border-r-2 border-gray-400 justify-center ">
-                        <form method="post" action="">
-                            <input onclick="this.form.submit()" type="checkbox" {{ $data['paid'] ? 'checked' : ''}}>
-                        </form>
+                        {{ $data['done'] }}/{{ $data['total'] }}
                     </div>
                     <div class="flex w-2/12 text-md justify-center ">
                         <div class="dropdown inline-block relative">
@@ -68,20 +66,28 @@
             @endforeach
         </div>
     </div>
-    <div class="flex w-8/12 h-5 mt-3 rounded border-4 text-center flex-col mb-5" style="height: 30vh; border-color: #4D4668; font-family: 'Roboto', sans-serif;">
-        <div class="text-3xl font-bold" style="color: #4D4668">Cadastro de Tasks Semanais</div>
+    <div class="flex w-8/12 h-5 mt-3 rounded border-4 items-center text-center flex-col mb-5" style="height: 35vh; border-color: #4D4668; font-family: 'Roboto', sans-serif;">
+        <div class="text-3xl mt-5 font-bold" style="color: #4D4668">Cadastro de Tasks Semanais</div>
         <form method="post" action="{{route('task.weeklyStore')}}">
             @method('post') @csrf
-            <div>
-                <label>Descrição</label>
-                <input name="desc" />
+            <div class="flex w-12/12 mt-5 justify-center align-center items-center">
+                <label class="p-3" >Descrição:</label>
+                <input class="p-3 bg-gray-100 border-black rounded border-r-2 border-b-2 w-8/12" name="desc" />
             </div>
 
-            <div>
-                <label>Final Week</label>
-                <input type="date" name="finalWeekDate" />
+
+            <div class="flex flex-row w-12/12 ">
+                <div>
+                    <label class="mr-5">Dia que começa:</label>
+                    <input class="bg-gray-100 mt-3 rounded" type="date" name="finalWeekDate" />
+                </div>
+                <div class="ml-6">
+                    <label class="mr-5">Dia que termina:</label>
+                    <input class="bg-gray-100 mt-3 rounded" type="date" name="created_at" />
+                </div>
             </div>
-            <button type="submit">Enviar</button>
+
+            <button class="mt-5 p-3 rounded px-8 bg-gray-100" type="submit">Enviar</button>
         </form>
     </div>
 </div>
