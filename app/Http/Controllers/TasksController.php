@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules\Exists;
 
 
 class TasksController extends Controller
@@ -21,12 +20,10 @@ class TasksController extends Controller
     public function index()
     {
         $tasks = Tasks::where('isWeekly', '=', true)->where('isActive', '=', true)->get();
-
         $tasksUnique = $tasks->unique('desc');
         foreach ($tasksUnique as $item) {
             $item->done = Tasks::where('desc', '=', $item->desc )->where('completed', '=', true)->count();
             $item->total = Tasks::where('desc', '=', $item->desc )->count();
-
         }
         return view('tasks.index', ['tasks' => $tasksUnique]);
     }
@@ -41,7 +38,6 @@ class TasksController extends Controller
         $request->validate([
             'desc' => 'required | min:3'
         ]);
-
         if (! isset($request->created_at)) {
             $created_at = Carbon::now();
         } else {
@@ -59,17 +55,27 @@ class TasksController extends Controller
         $days = Carbon::parse($request->finalWeekDate)->diffInDays(Carbon::now());
 
         for($i = 1; $i <= $days; $i++) {
+            $created_at = Carbon::make($request->created_at)->addDays($i);
             Tasks::create([
                 'desc' => $request->desc,
                 'owner_id' => Auth::user()->id,
                 'isWeekly' => true,
                 'finalWeekDate' => Carbon::make($request->finalWeekDate),
-                'created_at' => $created_at->addDay($i),
-                'updated_at' => $created_at->addDay($i)
+                'created_at' => $created_at,
+                'updated_at' => $created_at
             ]);
         }
-
         return Redirect::to(URL::previous() . "#tasks");
+    }
+    public function destroyWeekly(Request $request){
+        $task = Tasks::find($request->id);
+        $tasks = Tasks::where('desc', $task->desc)->get();
+
+        foreach ($tasks as $task) {
+            $task->delete();
+        }
+        return Redirect::to(URL::previous() . "#tasks");
+
     }
 
     /**
@@ -83,14 +89,12 @@ class TasksController extends Controller
         $request->validate([
             'desc' => 'required | min:3'
         ]);
-
         Tasks::create([
             'desc' => $request->desc,
             'owner_id' => Auth::user()->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
-
         return Redirect::to(URL::previous() . "#tasks");
     }
 

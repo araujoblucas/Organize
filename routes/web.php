@@ -19,10 +19,11 @@ Route::redirect('/', '/login');
 Route::view('/register', 'auth.register')->name('register');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/task/store/', [TasksController::class, 'store'])->name('task.store');
     Route::post('/task/store/weekly', [TasksController::class, 'storeWeekly'])->name('task.weeklyStore');
     Route::post('/task/store/delete', [TasksController::class, 'destroy'])->name('task.delete');
+    Route::post('/task/store/weeklyDelete', [TasksController::class, 'destroyWeekly'])->name('task.weeklyDelete');
     Route::post('/task/store/toggle_completed/{id}', [TasksController::class, 'toggle_completed'])->name('task.toggle_completed');
 
 

@@ -14,32 +14,38 @@
 
 </head>
 <body>
-<div class="flex flex-col items-center justify-center">
-    <div class="flex w-8/12 h-5 mt-3 rounded border-4 items-center text-center flex-col mb-5" style="height: 35vh; border-color: #4D4668; font-family: 'Roboto', sans-serif;">
-        <div class="text-3xl mt-5 font-bold" style="color: #4D4668">Cadastro de Tasks Semanais</div>
-        <form method="post" action="{{route('task.weeklyStore')}}">
-            @method('post') @csrf
-            <div class="flex w-12/12 mt-5 justify-center align-center items-center">
-                <label class="p-3" >Descrição:</label>
-                <input class="p-3 bg-gray-100 border-black rounded border-r-2 border-b-2 w-8/12" name="desc" />
-            </div>
-
-
-            <div class="flex flex-row w-12/12 ">
-                <div>
-                    <label class="mr-5">Dia que começa:</label>
-                    <input class="bg-gray-100 mt-3 rounded" type="datetime-local" name="finalWeekDate" />
+<div class="flex flex-col w-full items-center justify-center" style="box-sizing: border-box;">
+    <div class="flex w-full flex-row justify-around" style="height: 35vh; box-sizing: border-box;">
+        <a href="{{ route('dashboard') }}" class="flex w-1/12 hover:opacity-75 mt-3 rounded border-4 justify-center text-white items-center text-center flex-col mb-5" style="box-sizing: border-box;height: 35vh;background-color:#4D4668; border-color: #4D4668; font-family: 'Roboto', sans-serif; border-s">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </a>
+        <div class="flex w-8/12 h-5 mt-3 rounded border-4 items-center text-center flex-col mb-5" style="height: 35vh; border-color: #4D4668; font-family: 'Roboto', sans-serif;">
+            <div class="text-3xl mt-5 font-bold" style="color: #4D4668">Cadastro de Tasks Semanais</div>
+            <form method="post" action="{{route('task.weeklyStore')}}">
+                @method('post') @csrf
+                <div class="flex w-12/12 mt-5 justify-center align-center items-center">
+                    <label class="p-3" >Descrição:</label>
+                    <input class="p-3 bg-gray-100 border-black rounded border-r-2 border-b-2 w-8/12" name="desc" />
                 </div>
-                <div class="ml-6">
-                    <label class="mr-5">Dia que termina:</label>
-                    <input class="bg-gray-100 mt-3 rounded" type="datetime-local" name="created_at" />
+                <div class="flex flex-row w-12/12 ">
+                    <div>
+                        <label class="mr-5">Dia que começa:</label>
+                        <input class="bg-gray-100 mt-3 rounded" type="datetime-local" name="created_at" />
+                    </div>
+                    <div class="ml-6">
+                        <label class="mr-5">Dia que termina:</label>
+                        <input class="bg-gray-100 mt-3 rounded" type="datetime-local" name="finalWeekDate" />
+                    </div>
                 </div>
-            </div>
 
-            <button class="mt-5 p-3 rounded px-8 bg-gray-100" type="submit">Enviar</button>
-        </form>
+                <button class="mt-5 p-3 rounded px-8 bg-gray-100" type="submit">Enviar</button>
+            </form>
+        </div>
+        <div class="flex w-1/12 h-5 mt-3 rounded border-4 items-center text-center flex-col mb-5" style="box-sizing: border-box;height: 35vh; border-color: #4D4668; font-family: 'Roboto', sans-serif; border-s">
+
+        </div>
     </div>
-    <div class="flex w-11/12 h-5 mt-3 rounded border-4 text-center flex-col " style="border-color: #4D4668; height: 70vh; font-family: 'Roboto', sans-serif; ">
+    <div class="flex w-11/12 h-5 mt-8 rounded border-4 text-center flex-col " style="border-color: #4D4668; height: 70vh; font-family: 'Roboto', sans-serif; ">
         <div class="w-full flex flex-col">
             <div class="flex py-4 border-b-4 border-gray-300 w-full">
                 <div class="flex w-4/12 text-lg border-r-4 font-bold justify-center ">
@@ -77,14 +83,11 @@
                         {{ $data['done'] }}/{{ $data['total'] }}
                     </div>
                     <div class="flex w-2/12 text-md justify-center ">
-                        <div class="dropdown inline-block relative">
-                            <a  onclick="myFunction({{$key}})" href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                            <ul id="dropdown-menu{{$key}}" class="dropdown-menu absolute text-gray-700 pt-1" style="display: none">
-                                <li class=""><a class="rounded-t bg-gray-100 hover:bg-gray-200 py-2 px-4 block whitespace-no-wrap" href="#">Editar</a></li>
-                                <li class=""><a class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">Deletar</a></li>
-                            </ul>
-                        </div>
-
+                        <form class="flex w-2/12 text-sm justify-center" method="POST" action="{{ route('task.weeklyDelete')}}">
+                            @method('POST') @csrf
+                            <input name='id' value="{{ $data->id }}" style="display: none;"/>
+                            <button onclick="this.form.submit()" href="#"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </form>
                     </div>
                 </div>
             @endforeach
